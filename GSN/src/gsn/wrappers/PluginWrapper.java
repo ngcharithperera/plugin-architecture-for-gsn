@@ -29,6 +29,7 @@ package gsn.wrappers;
 
 import gsn.beans.AddressBean;
 import gsn.beans.DataField;
+import gsn.wrappers.plugin.MyPlugin;
 
 import java.io.File;
 import java.io.Serializable;
@@ -56,6 +57,7 @@ public class PluginWrapper extends AbstractWrapper {
   private AddressBean params;
   private long rate = 1000;
   private String PluginName;
+  public MyPlugin cool;
 
   public boolean initialize() {
     setName("MultiFormatWrapper" + counter++);
@@ -71,12 +73,16 @@ public class PluginWrapper extends AbstractWrapper {
     
     PluginManager pm = PluginManagerFactory.createPluginManager();
 	pm.addPluginsFrom(new File("plugins/"+PluginName+".jar").toURI());
+	cool = pm.getPlugin(MyPlugin.class);
+	
+	collection = cool.getCollection();
     return true;
   }
 
   public void run() {
-    Double light = 0.0, temperature = 0.0;
-    int packetType = 0;
+	  
+	  
+
     
     while (isActive()) {
       try {
@@ -86,13 +92,10 @@ public class PluginWrapper extends AbstractWrapper {
         logger.error(e.getMessage(), e);
       }
       
-      // create some random readings
-      light = ((int) (Math.random() * 10000)) / 10.0;
-      temperature = ((int) (Math.random() * 1000)) / 10.0;
-      packetType = 2;
+
 
       // post the data to GSN
-      postStreamElement(new Serializable[] { packetType, temperature, light });       
+      postStreamElement(cool.getData());       
     }
   }
 
