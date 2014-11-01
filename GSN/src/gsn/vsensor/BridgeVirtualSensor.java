@@ -51,6 +51,7 @@ public class BridgeVirtualSensor extends AbstractVirtualSensor {
 
     public void dataAvailable(String inputStreamName, StreamElement data) {
         if (allow_nulls)
+        	
             dataProduced(data);
         else {
             if (!areAllFieldsNull(data))

@@ -1,7 +1,9 @@
 <virtual-sensor name="MultiFormatTemperatureHandler2" priority="10">
 	<processing-class>
 		<class-name>gsn.vsensor.BridgeVirtualSensor</class-name>
-		<init-params />
+		<init-params>
+			<param name="plugin_name">SomeThing</param>
+		</init-params>
 		<output-structure>
 			<field name="light" type="double" />
 			<field name="temperature" type="double" />
