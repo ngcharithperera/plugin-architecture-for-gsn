@@ -2,6 +2,7 @@ package gsn.wrappers.plugin.implementaton;
 
 import java.io.Serializable;
 
+import gsn.beans.AddressBean;
 import gsn.beans.DataField;
 import gsn.wrappers.plugin.MyPlugin;
 import net.xeoh.plugins.base.Plugin;
@@ -9,7 +10,7 @@ import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 @PluginImplementation
 public class MyPluginImplementation implements MyPlugin {
-
+	private AddressBean params;
 	@Override
 	public DataField[] getCollection() {
 		DataField[] collection = new DataField[] {
@@ -30,5 +31,14 @@ public class MyPluginImplementation implements MyPlugin {
 	    packetType = 2;
 		return new Serializable[] { packetType, temperature, light };
 	}
+
+	@Override
+	public void setParameters(AddressBean params) {
+		this.params = params;
+		System.out.println(params.getPredicateValue( "plugin_name"));
+	}
+	
+	
+	
 
 }

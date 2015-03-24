@@ -76,6 +76,8 @@ public class PluginWrapper extends AbstractWrapper {
 	cool = pm.getPlugin(MyPlugin.class);
 	
 	collection = cool.getCollection();
+	cool.setParameters(params);
+	
     return true;
   }
 
