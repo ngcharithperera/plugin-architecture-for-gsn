@@ -1,15 +1,13 @@
 package gsn.vsensor.plugin;
 
-import java.io.Serializable;
+import java.util.TreeMap;
 
-import gsn.beans.DataField;
 import gsn.beans.StreamElement;
 import net.xeoh.plugins.base.Plugin;
 
 public interface VirtualSensorPlugin extends Plugin {
-	public DataField[] getCollection();
-	public Serializable[] getData();
 	public StreamElement getAnalysedData(String inputStreamName,
 			StreamElement data);
+	public void setParameters(TreeMap<String, String> params);
 }
 

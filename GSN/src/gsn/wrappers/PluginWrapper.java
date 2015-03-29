@@ -29,7 +29,7 @@ package gsn.wrappers;
 
 import gsn.beans.AddressBean;
 import gsn.beans.DataField;
-import gsn.wrappers.plugin.MyPlugin;
+import gsn.wrappers.plugin.WrapperPlugin;
 
 import java.io.File;
 import java.io.Serializable;
@@ -50,17 +50,16 @@ import org.apache.log4j.Logger;
  * 
  */
 public class PluginWrapper extends AbstractWrapper {
-  private DataField[] collection = new DataField[] { new DataField("packet_type", "int", "packet type"),
-      new DataField("temperature", "double", "Presents the temperature sensor."), new DataField("light", "double", "Presents the light sensor.") };
+  private DataField[] collection;
   private final transient Logger logger = Logger.getLogger(PluginWrapper.class);
   private int counter;
   private AddressBean params;
   private long rate = 1000;
-  private String PluginName;
-  public MyPlugin cool;
+  private String pluginName;
+  public WrapperPlugin wrapperPlugin;
 
   public boolean initialize() {
-    setName("MultiFormatWrapper" + counter++);
+    setName("PluginWrapper" + counter++);
     
     params = getActiveAddressBean();
     
@@ -69,23 +68,21 @@ public class PluginWrapper extends AbstractWrapper {
       
       logger.info("Sampling rate set to " + params.getPredicateValue( "rate") + " msec.");
     }
-    PluginName = params.getPredicateValue( "plugin_name");
+    
+    pluginName = params.getPredicateValue( "plugin_name");
     
     PluginManager pm = PluginManagerFactory.createPluginManager();
-	pm.addPluginsFrom(new File("plugins/"+PluginName+".jar").toURI());
-	cool = pm.getPlugin(MyPlugin.class);
+	pm.addPluginsFrom(new File("wrapper-plugin-repository/"+pluginName+".jar").toURI());
+	wrapperPlugin = pm.getPlugin(WrapperPlugin.class);
 	
-	collection = cool.getCollection();
-	cool.setParameters(params);
+	collection = wrapperPlugin.getCollection();
+	wrapperPlugin.setParameters(params);
 	
     return true;
   }
 
   public void run() {
 	  
-	  
-
-    
     while (isActive()) {
       try {
         // delay 
@@ -97,7 +94,7 @@ public class PluginWrapper extends AbstractWrapper {
 
 
       // post the data to GSN
-      postStreamElement(cool.getData());       
+      postStreamElement(wrapperPlugin.getData());       
     }
   }
 
@@ -106,7 +103,7 @@ public class PluginWrapper extends AbstractWrapper {
   }
 
   public String getWrapperName() {
-    return "MultiFormat Sample Wrapper";
+    return "PluginWrapper Wrapper";
   }  
 
   public void dispose() {

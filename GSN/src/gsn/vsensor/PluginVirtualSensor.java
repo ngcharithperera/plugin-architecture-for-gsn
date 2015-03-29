@@ -30,7 +30,7 @@ package gsn.vsensor;
 import gsn.beans.StreamElement;
 import gsn.beans.VSensorConfig;
 import gsn.vsensor.plugin.VirtualSensorPlugin;
-import gsn.wrappers.plugin.MyPlugin;
+import gsn.wrappers.plugin.WrapperPlugin;
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
 
@@ -47,15 +47,16 @@ public class PluginVirtualSensor extends AbstractVirtualSensor {
 	private TreeMap<String, String> params;
 	private VSensorConfig vsensor;
 	private String PluginName;
-	public VirtualSensorPlugin cool;
+	public VirtualSensorPlugin virtualSensorPlugin;
 	
 	public boolean initialize() {
 		vsensor = getVirtualSensorConfiguration();
 		params = vsensor.getMainClassInitialParams();
 		PluginName = params.get("plugin_name");
 	    PluginManager pm = PluginManagerFactory.createPluginManager();
-		pm.addPluginsFrom(new File("vsplugins/"+PluginName+".jar").toURI());	
-		cool = pm.getPlugin(VirtualSensorPlugin.class);
+		pm.addPluginsFrom(new File("virtual-sensor-plugin-repository/"+PluginName+".jar").toURI());	
+		virtualSensorPlugin = pm.getPlugin(VirtualSensorPlugin.class);
+		virtualSensorPlugin.setParameters(params);
 		String allow_nulls_str = params.get("allow-nulls");
 		if (allow_nulls_str != null)
 			allow_nulls = allow_nulls_str.equalsIgnoreCase("true");
@@ -65,7 +66,7 @@ public class PluginVirtualSensor extends AbstractVirtualSensor {
 
 	public void dataAvailable(String inputStreamName, StreamElement data) {
 		if (allow_nulls) {
-			dataProduced(cool.getAnalysedData(inputStreamName, data));
+			dataProduced(virtualSensorPlugin.getAnalysedData(inputStreamName, data));
 		} else {
 			if (!areAllFieldsNull(data))
 				dataProduced(data);

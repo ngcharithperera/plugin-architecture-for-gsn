@@ -19,7 +19,7 @@
 * 
 * File: src/gsn/http/rest/AndroidPushDelivery.java
 *
-* @author Đỗ Ngọc Hoan
+
 *
 */
 
