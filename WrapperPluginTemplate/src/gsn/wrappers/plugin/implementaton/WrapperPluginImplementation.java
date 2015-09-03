@@ -5,7 +5,7 @@
  * This project is intended to act as a templates to develop *
  * new wrapper plugins.                                      *        
  *                                                           *
- * Copyright to Dr. Charith Perera                           *
+ * Copyright to Charith Perera                               *
  * **********************************************************/
 package gsn.wrappers.plugin.implementaton;
 
